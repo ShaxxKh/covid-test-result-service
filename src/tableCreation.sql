@@ -19,3 +19,7 @@ create table testResults (
 	testResult testResult,
 	testDateTime timestamp
 )
+
+CREATE TABLE tokens (
+	token varchar(255)
+)
