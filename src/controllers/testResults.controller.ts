@@ -25,7 +25,6 @@ interface TestResults {
     testId: string,
     testResult: testResultMessage,
     testDateTime: Date;
-
 }
 
 class TestResultsController {
@@ -47,24 +46,78 @@ class TestResultsController {
         }
 
         if ( isAuth ) {
-            await req.body.forEach( async ( test: TestResults ) => {
-                const testResultsObj: TestResults = test;
-                const testResultArr = Object.values( testResultsObj );
-
+            const dbRequest = await db.query( `BEGIN`, async ( err: any, result: any ) => {
                 try {
-                    const dbRes = await db.query( `
-                            INSERT INTO testresults (appointmentId, appointmentStart, appointmentEnd, concernId, concernDescription, locationId, locationName, firstname, lastname, birthDate, eMail, mobileNumber, acceptedPrivacyDeclaration, acceptedTermsOfUse, testId, testResult, testDateTime) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-                            RETURNING *
-                            `, [ ...testResultArr ] );
+                    for ( const test of req.body ) {
+                        const testResultArr = Object.values( test );
+
+
+                        const dbRes = await db.query( `
+                                INSERT INTO testresults (appointmentId, appointmentStart, appointmentEnd, concernId, concernDescription, locationId, locationName, firstname, lastname, birthDate, eMail, mobileNumber, acceptedPrivacyDeclaration, acceptedTermsOfUse, testId, testResult, testDateTime) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                                RETURNING *
+                            `, [ ...testResultArr ], ( err: any, result: any ) => {
+                            if ( err ) {
+                                console.log( "error: " + err );
+                                // throw new Error( err );
+                            } else {
+                                console.log( "good job: " + result );
+                            }
+                        } );
+
+                    }
+
+                    await db.query( "COMMIT" );
                 } catch ( error ) {
-                    console.error( error );
+                    console.log( "overall error: " + error );
+                    res.status( 400 ).send( {
+                        message: error
+                    } );
+                    await db.query( "END" );
                 }
+
             } );
-            res.send( {
+            res.status( 201 ).send( {
                 message: "Test results are added"
             } );
+
+            // const dbRequestPromise: Promise<string> = new Promise<string>( async ( resolve, reject ) => {
+            //     for ( const test of req.body ) {
+            //         const testResultArr = Object.values( test );
+
+
+            //         const dbRes = await db.query( `
+            //                 INSERT INTO testresults (appointmentId, appointmentStart, appointmentEnd, concernId, concernDescription, locationId, locationName, firstname, lastname, birthDate, eMail, mobileNumber, acceptedPrivacyDeclaration, acceptedTermsOfUse, testId, testResult, testDateTime) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+            //                 RETURNING *
+            //             `, [ ...testResultArr ], ( err: any, res: any ) => {
+            //             if ( err ) {
+            //                 reject( err.message );
+
+            //             } else {
+            //                 console.log( "good job" );
+            //             }
+            //         } );
+
+            //     }
+            //     resolve( "" );
+            // } );
+
+            // await db.query( `COMMIT` );
+
+            // await dbRequestPromise.then( () => {
+            //     res.status( 201 ).send( {
+            //         message: "Test results are added"
+            //     } );
+            // } ).catch( async ( error: any ) => {
+            //     await db.query( `ROLLBACK` );
+            //     console.error( "Error occured while posting data to db: " + error );
+            //     res.status( 400 ).send( {
+            //         message: error
+            //     } );
+            // } );
+
+
         } else {
-            res.send( {
+            res.status( 401 ).send( {
                 message: "Wrong token"
             } );
         }
