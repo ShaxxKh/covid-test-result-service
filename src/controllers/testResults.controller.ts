@@ -73,7 +73,7 @@ class TestResultsController {
                     await db.query( "COMMIT" );
                 } catch ( error: any ) {
                     console.error( "overall error: " + error );
-                    statusCode = 400;
+                    statusCode = 500;
                     await db.query( "ROLLBACK" );
                 } finally {
                     res.status( statusCode ).send( {
