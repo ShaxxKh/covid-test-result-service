@@ -52,32 +52,39 @@ class TestResultsController {
 
         if ( isAuth ) {
             await db.query( `BEGIN`, async ( err: any, result: any ) => {
-                try {
-                    for ( const test of req.body ) {
-                        const testResultArr = Object.values( test );
+                if ( Array.isArray( req.body ) ) {
+                    try {
+                        for ( const test of req.body ) {
+                            const testResultArr = Object.values( test );
 
-                        await db.query( `
-                                INSERT INTO testresults (appointmentId, appointmentStart, appointmentEnd, concernId, concernDescription, locationId, locationName, firstname, lastname, birthDate, eMail, mobileNumber, acceptedPrivacyDeclaration, acceptedTermsOfUse, testId, testResult, testDateTime) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-                                RETURNING *
-                            `, [ ...testResultArr ], ( err: any, result: any ) => {
-                            if ( err ) {
-                                if ( err.code !== transactionBlockedErrCode ) {
-                                    console.error( "error: " + err );
-                                    statusCode = 400;
-                                    message = err.message;
+                            await db.query( `
+                                    INSERT INTO testresults (appointmentId, appointmentStart, appointmentEnd, concernId, concernDescription, locationId, locationName, firstname, lastname, birthDate, eMail, mobileNumber, acceptedPrivacyDeclaration, acceptedTermsOfUse, testId, testResult, testDateTime) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                                    RETURNING *
+                                `, [ ...testResultArr ], ( err: any, result: any ) => {
+                                if ( err ) {
+                                    if ( err.code !== transactionBlockedErrCode ) {
+                                        console.error( "error: " + err );
+                                        statusCode = 400;
+                                        message = err.message;
+                                    }
+
                                 }
-
-                            }
+                            } );
+                        }
+                        await db.query( "COMMIT" );
+                    } catch ( error: any ) {
+                        console.error( "overall error: " + error );
+                        statusCode = 500;
+                        message = error;
+                        await db.query( "ROLLBACK" );
+                    } finally {
+                        res.status( statusCode ).send( {
+                            message: message
                         } );
                     }
-                    await db.query( "COMMIT" );
-                } catch ( error: any ) {
-                    console.error( "overall error: " + error );
-                    statusCode = 500;
-                    await db.query( "ROLLBACK" );
-                } finally {
-                    res.status( statusCode ).send( {
-                        message: message
+                } else {
+                    res.status( 400 ).send( {
+                        message: "Request body should be array"
                     } );
                 }
             } );
