@@ -12,7 +12,8 @@ class TokenController {
                 RETURNING *
             `, [ token ] );
         } catch ( error ) {
-            res.status( 4 );
+            res.status( 400 );
+            console.error( error );
         }
 
         res.send( { message: "Token created", token } );

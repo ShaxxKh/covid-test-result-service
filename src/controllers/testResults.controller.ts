@@ -1,5 +1,5 @@
 import db from "../db";
-import { Request, Response, NextFunction, response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 enum testResultMessage {
     "positive",
@@ -93,6 +93,31 @@ class TestResultsController {
             res.status( 401 ).send( {
                 message: "Wrong token"
             } );
+        }
+    };
+
+    getTestResult = async ( req: Request, res: Response, next: NextFunction ) => {
+        console.log( "REQUEST HEADER: " + JSON.stringify( req.headers ) );
+        console.log( "REQUEST BODY: " + JSON.stringify( req.body ) );
+        const { id } = req.params;
+        let result;
+
+        if ( id ) {
+            try {
+                result = await db.query( `
+                    SELECT * FROM testResults WHERE appointmentid = $1
+                `, [ id ] );
+                if ( result.rows.length > 0 ) {
+                    res.status( 200 ).send( result );
+                } else {
+                    res.status( 404 ).send( { message: "Not result found with provided id" } );
+                }
+
+            } catch ( error ) {
+                console.error( "Error during searching results in database: " + error );
+            }
+        } else {
+            res.status( 400 ).send( { message: "ID is not provided" } );
         }
     };
 };
