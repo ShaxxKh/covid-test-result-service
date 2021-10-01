@@ -68,6 +68,16 @@
       .data-padding {
         padding: 4px;
       }
+
+      .wide-block {
+        width: 100%;
+      }
+
+      .text-info-block {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+      }
     </style>
   </head>
   <body>
@@ -143,6 +153,26 @@
           </tr>
         </table>
       </div>
+    </div>
+    <div class="wide-block">
+      <div class="text-info-block">
+        <span>Bescheinigung über das Ergebnis des PCR-Tests:</span>
+        <span>Zeitpunkt des Tests: 01.01.2021 14:25</span>
+        <span
+          ><input type="checkbox" name="result" id="result" checked /> Nachweis
+          des Coronavirus SARS-CoV-2</span
+        >
+        <span
+          ><input type="checkbox" name="result" id="result" checked /> kein
+          Nachweis des Coronavirus SARS-CoV-2</span
+        >
+        <span>Angaben zum verwendeten PCR-Test:</span>
+        <div class="text-info-block">
+          <span>Hersteller: XXXXX</span>
+          <span>Test-Nr.: 323524523</span>
+        </div>
+      </div>
+      <div class="qr-block"></div>
     </div>
   </body>
 </html>
