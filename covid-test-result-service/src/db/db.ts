@@ -1,6 +1,6 @@
 import { promisify } from "util";
 
-const { Client } = require( "pg" );
+import { Client } from "pg";
 
 interface dbOptions {
   ssl: boolean;

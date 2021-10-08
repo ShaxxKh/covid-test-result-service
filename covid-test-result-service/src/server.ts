@@ -1,14 +1,18 @@
 require( "dotenv" ).config();
 import express from "express";
-import db from "./db";
+import db from "./db/db";
 import testResultsRouter from "./routes/testResults.routes";
 import tokenRouter from "./routes/token.routes";
+import createTables from "./db/createTable";
 const cors = require( "cors" );
 
 
 
 db.connect()
-  .then( () => console.log( "Successfully connected to database" ) )
+  .then( () => {
+    createTables();
+    console.log( "Successfully connected to database" );
+  } )
   .catch( ( err: any ) => console.error( "Error occured during connection to database" + err ) );
 
 

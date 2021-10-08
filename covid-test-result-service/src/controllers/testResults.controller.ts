@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "../db/db";
 import { Request, Response, NextFunction } from "express";
 
 enum testResultMessage {

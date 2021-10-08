@@ -8,5 +8,6 @@ COPY ./covid-test-result-service/ .
 RUN npm install && npm run build
 # Указываем порт на котором будет работать приложение
 EXPOSE 5000
+RUN npm install pm2 -g
 # Команда которая запускается при запуске или при перезапуске контейнера
-CMD [ "node", "./build/server.js" ]
+CMD [ "pm2-runtime", "./build/server.js" ]

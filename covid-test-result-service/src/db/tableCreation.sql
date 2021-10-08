@@ -1,6 +1,18 @@
-CREATE TYPE testResult AS ENUM ('positive', 'negative', 'invalidsample');
+DO
+$$
+BEGIN
+  IF NOT EXISTS (SELECT *
+                        FROM pg_type typ
+                             INNER JOIN pg_namespace nsp
+                                        ON nsp.oid = typ.typnamespace
+                        where typ.typname = 'testresult') THEN
+    CREATE TYPE testResult AS ENUM ('positive', 'negative', 'invalidsample');
+  END IF;
+END;
+$$
+LANGUAGE plpgsql;
 
-create table testResults (
+create table if not exists testResults (
 	appointmentId varchar(12),
 	appointmentStart timestamp,
 	appointmentEnd timestamp,
@@ -20,6 +32,6 @@ create table testResults (
 	testDateTime timestamp
 )
 
-CREATE TABLE tokens (
+CREATE table if not exists tokens (
 	token varchar(255)
 )
