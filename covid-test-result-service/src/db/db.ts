@@ -1,5 +1,3 @@
-import { promisify } from "util";
-
 import { Client } from "pg";
 
 interface dbOptions {
