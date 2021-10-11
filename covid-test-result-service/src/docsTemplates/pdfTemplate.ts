@@ -7,16 +7,16 @@ const QR = require( "qrcode-base64" );
 async function pdfTemplate ( data: any ): Promise<string> {
     let pdfPath = "";
     const html = fs.readFileSync( path.join( __dirname, "./pdfTemplate.html" ), "utf8" );
-    const { testresult, appointmentid } = data.data;
+    const { testresult, appointmentid, reqUrl } = data.data;
     let testResultBool = false;
 
-    const qr64 = QR.drawImg( `${data.reqUrl}/${appointmentid}`, {
+    const qr64 = QR.drawImg( `${reqUrl}`, {
         typeNumber: 4,
         errorCorrectLevel: 'M',
         size: 500
     } );
 
-    console.log( testresult, appointmentid );
+    console.log( testresult, reqUrl );
 
     switch ( testresult ) {
         case "negative":
