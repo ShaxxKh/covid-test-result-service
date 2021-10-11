@@ -1,4 +1,4 @@
-docker build . -t shaxx/1.0.1 - сборка контейнера node-app из dockerFile. Испольняется на уровне с dockerFile
+docker build . -t covid-be/1.0.1 - сборка контейнера node-app из dockerFile. Испольняется на уровне с dockerFile
 
 docker run -d --name postgresql01 -p 5432:5432 -e PG_DATABASE=postgres -e PG_USER=postgres -e PG_PASSWORD=postgres -e POSTGRES_PASSWORD=postgres -v data:/var/lib/postgresql/data postgres:latest
 
@@ -15,7 +15,7 @@ chown -R 1000:1000 data - change owner for data directory
 
 ---
 
-docker run -d -p 5000:5000 --add-host postgresql01:192.168.1.15 -e PG_HOST=postgresql01 -e PG_DATABASE=postgres -e PG_USER=postgres -e PG_PORT=5432 -e PG_PASSWORD=postgres --name node01 shaxx/1.0.1
+docker run -d -p 5000:5000 --add-host postgresql01:192.168.106.151 -e PG_HOST=postgresql01 -e PG_DATABASE=postgres -e PG_USER=postgres -e PG_PORT=5432 -e PG_PASSWORD=postgres --name node01 covid-be/1.0.1
 
 -v - данные из файла hosts.txt из сервера заменят данные в файле по пути etc/hosts в докер контейнере
 shaxx/1.0.1 - испольуем image докера для этого запуска контейнера
