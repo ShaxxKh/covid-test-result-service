@@ -10,7 +10,7 @@ async function pdfTemplate ( data: any ): Promise<string> {
     const { testresult, appointmentid } = data.data;
     let testResultBool = false;
 
-    const qr64 = QR.drawImg( `${constants.FRONT_URL}/${appointmentid}`, {
+    const qr64 = QR.drawImg( `${data.reqUrl}/${appointmentid}`, {
         typeNumber: 4,
         errorCorrectLevel: 'M',
         size: 500
