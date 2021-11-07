@@ -116,6 +116,7 @@
         width: 90%;
         text-align: center;
         display: inline-block;
+        word-break: break-all;
       }
       .underlined {
         width: fit-content;
@@ -165,78 +166,62 @@
       <table border="1" class="table table-smaller">
         <tr class="row">
           <td colspan="1" class="cell cell-wider">
-            <span class="table-cell-span">Name, Vorname</span>
+            <span class="table-cell-span">Фамилия, Имя</span>
             <span class="table-cell-span bold"
-              >{{this.data.lastname}},{{this.data.firstname}}</span
+              >{{this.data.lastname}}, {{this.data.firstname}}</span
             >
           </td>
           <td colspan="1" class="cell cell-smaller">
-            <span class="table-cell-span">geb. am</span>
-            <span class="table-cell-span bold"></span>
+            <span class="table-cell-span">Дата рождения</span>
+            <span class="table-cell-span bold">{{this.data.birthdate}}</span>
           </td>
         </tr>
         <tr>
           <td colspan="2" class="cell">
-            <span class="table-cell-span">Straße, Hausnummer</span>
-            <span class="table-cell-span bold"></span>
+            <span class="table-cell-span">E-Mail</span>
+            <span class="table-cell-span bold">{{this.data.email}}</span>
           </td>
         </tr>
         <tr>
           <td colspan="2" class="cell">
-            <span class="table-cell-span">Postleitzahl, Wohnort</span>
-            <span class="table-cell-span bold"></span>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" class="cell">
-            <span class="table-cell-span">Land</span>
-            <span class="table-cell-span bold"></span>
+            <span class="table-cell-span">Номер телефона</span>
+            <span class="table-cell-span bold">{{this.data.mobilenumber}}</span>
           </td>
         </tr>
       </table>
       <div class="table-smaller logo-block">
-        <span class="logo">Platzhalter für Logo</span>
+        <span class="logo">Лого</span>
       </div>
     </div>
     <div class="first-block">
       <div class="table-smaller">
-        <h2 class="cell bold id-header">ID Testperson:</h2>
+        <h2 class="cell bold id-header">Идентификация:</h2>
         <table class="table" border="1">
           <tbody>
             <tr>
               <td class="cell">
-                <span class="table-cell-span">Fortlaufende Nummer</span>
-                <span class="table-cell-span bold"></span>
+                <span class="table-cell-span"> ID-посещения</span>
+                <span class="table-cell-span bold"
+                  >{{this.data.appointmentid}}</span
+                >
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="table-smaller right-block">
-        <h2 class="cell bold id-header">Teststelle:</h2>
+        <h2 class="cell bold id-header">Местоположение:</h2>
         <table border="1" class="table">
           <tr class="">
             <td class="cell">
-              <span class="table-cell-span">Straße, Hausnummer</span>
-              <span class="table-cell-span bold"></span>
+              <span class="table-cell-span">Город</span>
+              <span class="table-cell-span bold">Tashkent</span>
             </td>
           </tr>
           <tr>
             <td class="cell">
-              <span class="table-cell-span">Postleitzahl, Ort</span>
-              <span class="table-cell-span bold"></span>
-            </td>
-          </tr>
-          <tr>
-            <td class="cell">
-              <span class="table-cell-span">Telefonnummer</span>
-              <span class="table-cell-span bold">{{this.mobilenumber}}</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="cell">
-              <span class="table-cell-span">E-Mail-Adresse</span>
-              <span class="table-cell-span bold">{{this.email}}</span>
+              <span class="table-cell-span">ID местоположения</span>
+              <span class="table-cell-span bold">{{this.data.locationid}}</span>
             </td>
           </tr>
         </table>
@@ -245,9 +230,11 @@
     <div class="wide-block">
       <div class="text-info-block">
         <span class="text-info-block-span underlined"
-          >Bescheinigung über das Ergebnis des PCR-Tests:</span
+          >Сертификат результата ПЦР теста:</span
         >
-        <span class="text-info-block-span">Zeitpunkt des Tests: </span>
+        <span class="text-info-block-span"
+          >Дата тестирования: {{this.data.testdatetime}}</span
+        >
         <span class="text-info-block-span"
           >{{#if testResultBool}}
           <input
@@ -264,7 +251,7 @@
             name="result"
             id="resultPositive"
           />
-          {{/if}} Nachweis des Coronavirus SARS-CoV-2</span
+          {{/if}} Обнаружен короноворус SARS-CoV-2</span
         >
         <span class="text-info-block-span">
           {{#if testResultBool}}
@@ -282,44 +269,43 @@
             id="result"
             checked
           />
-          {{/if}} kein Nachweis des Coronavirus SARS-CoV-2</span
+          {{/if}} Не обнаружен короноворус SARS-CoV-2</span
         >
         <span class="text-info-block-span underlined"
-          >Angaben zum verwendeten PCR-Test:</span
-        >
+          >Детали теста на ПЦР:
+        </span>
         <div class="text-info-block">
-          <span class="text-info-block-span-bottom">Hersteller: XXXXX</span>
-          <span class="text-info-block-span">Test-Nr.: {{this.testid}}</span>
+          <!-- <span class="text-info-block-span-bottom"></span> -->
+          <span class="text-info-block-span"
+            >ID теста: {{this.data.testid}}</span
+          >
         </div>
       </div>
       <div class="qr-block">
         <img class="qr-code" src="{{qr}}" alt="qr" />
         <p class="qr-text">
-          Scannen Sie den Code, um das Ergebnis online abzurufen oder besuchen
-          Sie die Website https://example.com/result/
+          Просканируйте QR-код чтобы получить результаты вашего теста
+          {{this.qrCodeHref}}
         </p>
       </div>
     </div>
     <div class="date-block">
-      <span class="block-span bold underlined">Musterstadt, 01.01.2021</span>
-      <span class="block-span">Ort, Datum, Uhrzeit</span>
+      <span class="block-span bold underlined"
+        >Tashkent, {{this.data.testdatetime}}</span
+      >
+      <span class="block-span">Город, Дата, Время</span>
     </div>
     <div class="date-block">
       <span class="block-span overlined"
-        >Unterschrift der verantwortlichen Teststelle</span
+        >Подпись ответственного сотрудника центра тестирования</span
       >
     </div>
     <div class="footer-block">
       <span class="footer-span"
-        >Hinweis: Dokument fälschen ist nicht erlaubt!</span
+        >Фальсификация данного документа не допускается</span
       >
     </div>
-    <p id="hiddenResult" class="hidden">asd{{this.data.testresult}}</p>
+    <!-- <p id="hiddenResult" class="hidden">asd{{this.data.testresult}}</p> -->
   </body>
-  <script type="text/javascript">
-    // new QRCode(
-    //   document.getElementById("qrcode"),
-    //   "http://jindo.dev.naver.com/collie"
-    // );
-  </script>
+  <script type="text/javascript"></script>
 </html>
